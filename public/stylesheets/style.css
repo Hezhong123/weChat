@@ -1,0 +1,32 @@
+body {
+  padding: 50px;
+  /*font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;*/
+}
+
+a {
+  color: #00B7FF;
+}
+
+.red{
+  background-color: red;
+  color: white;
+  padding: 0 5px;
+  margin-left: 10px;
+  text-align: center;
+  border-radius: 10px;
+}
+
+.send{
+  width: 90%;
+  margin: 0 auto;
+  display: flex;
+  position: fixed;
+    bottom: 10px;
+    left: 5%;
+}
+.send input{
+  flex: 1;
+}
+.send button{
+  width: 100px;
+}

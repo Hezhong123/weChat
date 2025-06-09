@@ -1,0 +1,46 @@
+extends layout
+
+block content
+
+  h1 房间: #{room}
+  div.list
+    ul#imList
+
+  div.send
+    input(type='text' id='sendText')
+    button(onclick='send()') #{user}发送
+
+  script(src='https://cdn.socket.io/4.7.5/socket.io.min.js')
+  script.
+    document.title = '#{user}的会话'
+    const socket = window.io('/');
+    $(document).ready(function (){
+      socket.on('connection', () => {
+        console.log('[客戶端] Socket.IO 連接成功！Socket ID:', socket.id);
+        socket.emit('joinRoom', {
+          room: '#{room}'
+        })
+      });
+      socket.on('newMessage', (data) => {
+        console.log(data);
+        const $newMsg = $(`<li>`).text(`${data.go} : ${data.msg}`)
+        $('#imList').append($newMsg);
+      });
+    })
+
+    const $input = $('#sendText');
+    function send(){
+      let msg = $input.val()
+      if(msg.length){
+        socket.emit('sendMessage', {
+          "room": "#{room}",
+          "go": "#{user}",
+          "to": "a1",
+          "msg": $input.val()
+        })
+      }else {
+        alert("什么都没有输入、、")
+      }
+    }
+    console.log(1111,window)
+

@@ -1,0 +1,30 @@
+extends layout
+
+block content
+  h1= `${user}的会话列表`
+  ul#manualList
+  script.
+    document.title = '#{user}的对话列表'
+    $(document).ready(function(){
+      const eventSource = new EventSource(`/event/#{user}`);
+      eventSource.onopen = function () {
+        console.log('[EventSource] 连接已打开。');
+      };
+      eventSource.onmessage = function (res) {
+        let msg = JSON.parse(res.data)
+        let $element = $(`#${msg.room}`);
+        if($element.length){
+          $element.html(`房间<a href=/im/#{user}/${msg.room}> ${msg.room}</a>: ${msg.go} - ${msg.msg}`);
+        }else {
+          const $newItem = $(`<li id=${msg.room} >`).html(`房间<a href=/im/#{user}/${msg.room}> ${msg.room}</a>: ${msg.go} - ${msg.msg}`)
+          $('#manualList').append($newItem);
+        }
+
+        console.log('sse推送信息',msg)
+      }
+      eventSource.onerror = function (err) {
+        console.error('[EventSource] EventSource 发生错误:', err);
+      };
+    })
+
+
