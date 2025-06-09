@@ -35,7 +35,7 @@ block content
         socket.emit('sendMessage', {
           "room": "#{room}",
           "go": "#{user}",
-          "to": "a1",
+          "to": "#{to}",
           "msg": $input.val()
         })
       }else {
