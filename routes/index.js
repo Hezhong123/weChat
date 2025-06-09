@@ -34,12 +34,13 @@ router.get('/im/:user', async (ctx, next) => {
   })
 })
 
-router.get('/im/:user/:room', async (ctx, next) => {
-  let {room,user} = ctx.params
+router.get('/im/:user/:room/:to', async (ctx, next) => {
+  let {room,user,to} = ctx.params
   await ctx.render('im', {
     title: '会话',
     user:user,
-    room:room
+    room:room,
+    to:to
   })
 })
 
