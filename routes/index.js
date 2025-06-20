@@ -9,6 +9,12 @@ router.get('/', async (ctx, next) => {
   })
 })
 
+router.get('/video', async (ctx, next) => {
+  await ctx.render('video', {
+    title: 'Hello Koa 2!'
+  })
+})
+
 // 联系人列表see服务
 router.get('/event/:user', async (ctx, next) => {
   let {user} = ctx.params

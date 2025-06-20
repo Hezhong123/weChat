@@ -30,3 +30,10 @@ a {
 .send button{
   width: 100px;
 }
+
+video {
+  width: 320px;
+  height: 240px;
+  /*filter: blur(4px) invert(1) opacity(0.5);*/
+  /*filter: hue-rotate(180deg) saturate(200%);*/
+}

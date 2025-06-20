@@ -1,0 +1,14 @@
+extends layout
+
+block content
+    h1 本地视频流
+    video(id="localVideo" autoplay playsinline )
+    h1 对方(远程)推流
+    video(id="remoteVideo" autoplay playsinline)
+    button(id="startButton") 开始
+    button(id="callButton") 呼叫
+    button(id="hangupButton") 挂断
+
+
+    script(src="./javascripts/adapter-latest.js")
+    script(src="./javascripts/webRtc.js")
