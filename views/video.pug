@@ -2,13 +2,16 @@ extends layout
 
 block content
     h1 本地视频流
-    video(id="localVideo" autoplay playsinline )
+    video(id="localVideo" playsinline autoplay  )
     h1 对方(远程)推流
-    video(id="remoteVideo" autoplay playsinline)
+    video(id="remoteVideo" autoplay playsinline muted)
     button(id="startButton") 开始
     button(id="callButton") 呼叫
     button(id="hangupButton") 挂断
 
-
+    div(id="webm")
+        video(id="webmVideo"  playsinline controls loop muted)
+            source(src="/chrome.webm" type="video/webm")
+        h1 视频媒体
     script(src="./javascripts/adapter-latest.js")
     script(src="./javascripts/webRtc.js")

@@ -24,6 +24,9 @@ a {
     bottom: 10px;
     left: 5%;
 }
+#webm{
+  display:none;
+}
 .send input{
   flex: 1;
 }

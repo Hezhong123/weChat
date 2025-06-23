@@ -22,6 +22,8 @@ let startTime = null;
 const localVideo = document.getElementById('localVideo');
 // 远端视频流
 const remoteVideo = document.getElementById('remoteVideo');
+const webm = document.getElementById('webm');
+
 
 let localStream;  //本地流
 let remoteStream; //远端流
@@ -190,7 +192,6 @@ function createdAnswer(description) {
 const startButton = document.getElementById('startButton');
 const callButton = document.getElementById('callButton');
 const hangupButton = document.getElementById('hangupButton');
-
 // Set up initial action buttons status: disable call and hangup.
 callButton.disabled = true;
 hangupButton.disabled = true;
@@ -204,14 +205,29 @@ function startAction() {
     trace('请求本地流,Requesting local stream.');
 }
 
+//通过视频转为原端流
+const webmVideo = document.getElementById('webmVideo');
+webmVideo.addEventListener('play',()=>{
+    let stream;
+    const fps = 0;
+    if (webmVideo.captureStream) {
+        stream = webmVideo.captureStream(fps);
+    } else if (webmVideo.mozCaptureStream) {
+        stream = webmVideo.mozCaptureStream(fps);
+    } else {
+        console.error('Stream capture is not supported');
+        stream = null;
+    }
+    remoteVideo.srcObject = stream;
+})
+
+
 // Handles call button action: creates peer connection.
 function callAction() {
     callButton.disabled = true;
     hangupButton.disabled = false;
-
     trace('开始请求远端流 Starting call.');
     startTime = window.performance.now();
-
     // Get local media stream tracks.
     const videoTracks = localStream.getVideoTracks();
     const audioTracks = localStream.getAudioTracks();
@@ -221,28 +237,22 @@ function callAction() {
     if (audioTracks.length > 0) {
         trace(`音频输出设备 Using audio device: ${audioTracks[0].label}.`);
     }
-
     const servers = null // Allows for RTC server configuration.
     // Create peer connections and add behavior.
     localPeerConnection = new RTCPeerConnection(servers);
     trace('创建本地链接对象 Created local peer connection object localPeerConnection.');
-
     localPeerConnection.addEventListener('icecandidate', handleConnection);
     localPeerConnection.addEventListener(
         'iceconnectionstatechange', handleConnectionChange);
-
     remotePeerConnection = new RTCPeerConnection(servers);
     trace('创建远端链接对象 Created remote peer connection object remotePeerConnection.');
-
     remotePeerConnection.addEventListener('icecandidate', handleConnection);
     remotePeerConnection.addEventListener(
         'iceconnectionstatechange', handleConnectionChange);
     remotePeerConnection.addEventListener('addstream', gotRemoteMediaStream);
-
     // Add local stream to connection and create offer to connect.
     localPeerConnection.addStream(localStream);
     trace('增加本地流, Added local stream to localPeerConnection.');
-
     trace('启动本地流 localPeerConnection createOffer start.');
     localPeerConnection.createOffer(offerOptions)
         .then(createdOffer).catch(setSessionDescriptionError);
@@ -250,6 +260,7 @@ function callAction() {
 
 // Handles hangup action: ends up call, closes connections and resets peers.
 function hangupAction() {
+    webm.style.display = 'block'
     localPeerConnection.close();
     remotePeerConnection.close();
     localPeerConnection = null;
@@ -263,7 +274,6 @@ function hangupAction() {
 startButton.addEventListener('click', startAction);
 callButton.addEventListener('click', callAction);
 hangupButton.addEventListener('click', hangupAction);
-
 
 // Define helper functions.
 
