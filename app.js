@@ -9,6 +9,9 @@ const logger = require('koa-logger')
 const index = require('./routes/index')
 const users = require('./routes/users')
 
+const  redis = require('./redis')
+app.context.redis = redis;
+
 // error handler
 onerror(app)
 

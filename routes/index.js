@@ -3,6 +3,9 @@ const {PassThrough} = require("stream");
 const WebSocket = require('ws');
 const eventBus = require('../utils/event_bus'); // 引入事件总线
 
+const friend = require('./friend');
+router.use('/friend',friend.routes(), friend.allowedMethods() )
+
 router.get('/', async (ctx, next) => {
   await ctx.render('index', {
     title: 'Hello Koa 2!'
