@@ -1,15 +1,15 @@
 const router = require('koa-router')()
 
 
+//朋友圈数据模版
 router.get('/list/:id', async (ctx, next) => {
     let {id} = ctx.params
     const momentIds = await ctx.redis.zrevrange(`timeline:${id}`, 0, 10);
-    console.log(momentIds)
+
     // 使用 Pipeline 批量獲取每條動態的詳細內容
     const pipeline = ctx.redis.pipeline();
     for (const id of momentIds) {
         pipeline.hgetall(id);
-        console.log('动态',id)
         const commentIds = await ctx.redis.lrange(`${id}:comments`, 0, -1);
     }
     const results = await pipeline.exec();
@@ -17,7 +17,6 @@ router.get('/list/:id', async (ctx, next) => {
         console.log('asdd',result)
         return result[1]
     });
-    console.log(data)
     await ctx.render('friend', {
         title: id,
         data:data
