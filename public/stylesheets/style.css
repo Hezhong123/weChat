@@ -40,3 +40,9 @@ video {
   /*filter: blur(4px) invert(1) opacity(0.5);*/
   /*filter: hue-rotate(180deg) saturate(200%);*/
 }
+
+.msg{
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom:1px solid #e2e2e2;
+}

@@ -1,9 +1,27 @@
 const router = require('koa-router')()
 
 
-router.get('/', async (ctx, next) => {
-    await ctx.redis.hset('user:123', 'username', 'Alice', 'avatar', 'url_to_avatar');
-    ctx.body = "朋友圈"
+router.get('/list/:id', async (ctx, next) => {
+    let {id} = ctx.params
+    const momentIds = await ctx.redis.zrevrange(`timeline:${id}`, 0, 10);
+    console.log(momentIds)
+    // 使用 Pipeline 批量獲取每條動態的詳細內容
+    const pipeline = ctx.redis.pipeline();
+    for (const id of momentIds) {
+        pipeline.hgetall(id);
+        console.log('动态',id)
+        const commentIds = await ctx.redis.lrange(`${id}:comments`, 0, -1);
+    }
+    const results = await pipeline.exec();
+    let data = results.map(result =>{
+        console.log('asdd',result)
+        return result[1]
+    });
+    console.log(data)
+    await ctx.render('friend', {
+        title: id,
+        data:data
+    })
 })
 
 
@@ -78,7 +96,10 @@ router.get('/moment/:id', async (ctx, next) => {
         const commentIds = await ctx.redis.lrange(`${id}:comments`, 0, -1);
     }
     const results = await pipeline.exec();
-    let data = results.map(result =>result[1]);
+    let data = results.map(result =>{
+        console.log('asdd',result)
+        return result[1]
+    });
     ctx.body = data
 })
 

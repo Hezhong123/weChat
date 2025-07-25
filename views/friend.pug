@@ -1,0 +1,11 @@
+extends layout
+
+block content
+    h1= title+'的朋友圈'
+    each msg, index in data
+        div.msg
+            h6= msg.id
+            h5= msg.content
+            img(src= msg.imageUrl)
+
+    script(src='/javascripts/friend.js')
